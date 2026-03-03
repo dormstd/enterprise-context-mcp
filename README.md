@@ -185,7 +185,11 @@ Add the server to your MCP client configuration (e.g. Claude Desktop):
 
 - [`enterprise-context-mcp-admin`](https://github.com/dormstd/enterprise-context-mcp-admin) — the FastAPI write service that manages schema, CRUD, and seeding
 
----
+
+## ToDo
+
+- Authentication mechanisms
+
 
 ## License
 
