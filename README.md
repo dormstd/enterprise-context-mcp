@@ -77,16 +77,10 @@ enterprise-context-mcp/
 uv sync
 ```
 
-### Run with the MCP Inspector (development)
+### Run as an MCP server (http transport)
 
 ```bash
-ENTERPRISE_DB_PATH=/path/to/enterprise.duckdb uv run fastmcp dev main.py
-```
-
-### Run as an MCP server (stdio transport)
-
-```bash
-ENTERPRISE_DB_PATH=/path/to/enterprise.duckdb uv run fastmcp run main.py
+ENTERPRISE_DB_PATH=/path/to/enterprise.duckdb uv run fastmcp run main.py:mcp --transport http --port 8000
 ```
 
 ---
@@ -178,18 +172,10 @@ Both the admin and MCP reader deployments must mount the same PVC at the path po
 ## Using with an LLM Client
 
 Add the server to your MCP client configuration (e.g. Claude Desktop):
-
 ```json
-{
-  "mcpServers": {
-    "enterprise-context": {
-      "command": "uv",
-      "args": ["run", "--directory", "/path/to/enterprise-context-mcp", "fastmcp", "run", "main.py"],
-      "env": {
-        "ENTERPRISE_DB_PATH": "/path/to/enterprise.duckdb"
-      }
-    }
-  }
+"enterprise-context-mcp": {
+    "type": "http",
+    "url": "http://localhost:8000/mcp"
 }
 ```
 
