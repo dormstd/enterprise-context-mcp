@@ -1,0 +1,10 @@
+[project]
+name = "enterprise-context-mcp"
+version = "0.1.0"
+description = "MCP server to provide context to LLM about the processes and rules of your company"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastmcp>=3.0.2",
+    "duckdb>=1.2.0",
+]
