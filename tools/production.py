@@ -21,8 +21,7 @@ async def get_production_checklist(ctx: Context) -> KnowledgeList:
     security, performance, runbook, support, and compliance criteria.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["checklist"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["checklist"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -35,8 +34,7 @@ async def get_monitoring_standards(ctx: Context) -> KnowledgeList:
     alerting thresholds, SLA/SLO definitions, and approved tooling.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["monitoring"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["monitoring"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -50,8 +48,7 @@ async def get_deployment_process(ctx: Context) -> KnowledgeList:
     during and after deployments.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["deployment"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["deployment"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -65,7 +62,6 @@ async def get_incident_response_process(ctx: Context) -> KnowledgeList:
     and SLA obligations for incident resolution times.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["incidents"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["incidents"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))

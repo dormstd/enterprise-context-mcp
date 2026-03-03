@@ -20,8 +20,7 @@ async def get_development_standards(ctx: Context) -> KnowledgeList:
     and quality expectations that apply to all projects regardless of technology.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["standards"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["standards"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -35,8 +34,7 @@ async def get_new_project_checklist(ctx: Context) -> KnowledgeList:
     and production readiness requirements.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["new-project"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["new-project"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -49,7 +47,6 @@ async def get_dependency_management_policy(ctx: Context) -> KnowledgeList:
     vulnerability handling procedures, and approved package registries.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["dependencies"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["dependencies"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))

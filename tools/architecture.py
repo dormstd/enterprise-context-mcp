@@ -20,8 +20,7 @@ async def get_architecture_guidelines(ctx: Context) -> KnowledgeList:
     the architecture review process, and principles guiding system design choices.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["guidelines"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["guidelines"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -37,7 +36,6 @@ async def get_tech_radar(ctx: Context) -> KnowledgeList:
     - Hold: avoid for new projects; may still exist in legacy systems
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["tech-radar"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["tech-radar"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))

@@ -40,11 +40,10 @@ async def get_security_policies(
     networking (network segmentation & exposure rules).
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
     tags = ["security"]
     if area:
         tags.append(area)
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=tags)
+    entries = await query_entries(db, category=_CATEGORY, tags=tags)
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -57,8 +56,7 @@ async def get_compliance_requirements(ctx: Context) -> KnowledgeList:
     privacy obligations, and certification maintenance responsibilities.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["compliance"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["compliance"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -72,7 +70,6 @@ async def get_secrets_management_policy(ctx: Context) -> KnowledgeList:
     and incident response for exposed credentials.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["secrets"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["secrets"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))

@@ -20,8 +20,7 @@ async def get_cicd_pipeline_standards(ctx: Context) -> KnowledgeList:
     and mandatory checks that every pipeline must include before deploying to production.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["pipeline"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["pipeline"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -34,8 +33,7 @@ async def get_security_scanning_rules(ctx: Context) -> KnowledgeList:
     when scans must run, blocking vs. non-blocking findings, and the exemption process.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["security-scanning"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["security-scanning"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -48,8 +46,7 @@ async def get_quality_gate_requirements(ctx: Context) -> KnowledgeList:
     duplication limits, and SonarQube/coverage tool pass/fail criteria.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["quality-gates"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["quality-gates"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
 
@@ -62,7 +59,6 @@ async def get_artifact_management_rules(ctx: Context) -> KnowledgeList:
     signing requirements, and promotion rules between environments.
     """
     db = ctx.lifespan_context["db"]
-    lock = ctx.lifespan_context["db_lock"]
-    entries = await query_entries(db, lock, category=_CATEGORY, tags=["artifacts"])
+    entries = await query_entries(db, category=_CATEGORY, tags=["artifacts"])
     items = [KnowledgeEntry(**e) for e in entries]
     return KnowledgeList(entries=items, total=len(items))
