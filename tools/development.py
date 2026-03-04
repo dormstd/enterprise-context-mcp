@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from fastmcp import Context, FastMCP
 
-from db import query_entries
-from models import KnowledgeEntry, KnowledgeList
+from db import fetch_knowledge
+from models import KnowledgeList
 
 dev_server = FastMCP("Development")
 
@@ -19,10 +19,7 @@ async def get_development_standards(ctx: Context) -> KnowledgeList:
     Covers coding standards, naming conventions, code documentation requirements,
     and quality expectations that apply to all projects regardless of technology.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["standards"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["standards"])
 
 
 @dev_server.tool(annotations={"readOnlyHint": True})
@@ -33,10 +30,7 @@ async def get_new_project_checklist(ctx: Context) -> KnowledgeList:
     repository setup, CI/CD integration, security scanning, observability, documentation,
     and production readiness requirements.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["new-project"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["new-project"])
 
 
 @dev_server.tool(annotations={"readOnlyHint": True})
@@ -46,7 +40,4 @@ async def get_dependency_management_policy(ctx: Context) -> KnowledgeList:
     Covers dependency approval process, version pinning requirements,
     vulnerability handling procedures, and approved package registries.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["dependencies"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["dependencies"])

@@ -11,6 +11,9 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 import duckdb
+from fastmcp import Context
+
+from models import KnowledgeEntry, KnowledgeList
 
 _DB_PATH_DEFAULT = "./enterprise.duckdb"
 
@@ -132,3 +135,18 @@ async def query_entries(
         entries.append(entry)
 
     return entries
+
+
+async def fetch_knowledge(
+    ctx: Context,
+    *,
+    category: str | None = None,
+    tags: list[str] | None = None,
+    role: str | None = None,
+    search: str | None = None,
+) -> KnowledgeList:
+    """Resolve the DB connection from context, query entries, and return a KnowledgeList."""
+    db = ctx.lifespan_context["db"]
+    rows = await query_entries(db, category=category, tags=tags, role=role, search=search)
+    items = [KnowledgeEntry(**entry) for entry in rows]
+    return KnowledgeList(entries=items, total=len(items))

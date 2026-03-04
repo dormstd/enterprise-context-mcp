@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from fastmcp import Context, FastMCP
 
-from db import query_entries
-from models import KnowledgeEntry, KnowledgeList
+from db import fetch_knowledge
+from models import KnowledgeList
 
 git_server = FastMCP("Git")
 
@@ -19,10 +19,7 @@ async def get_pr_conventions(ctx: Context) -> KnowledgeList:
     Covers required PR title format, description template, linked ticket requirements,
     review assignment rules, minimum approvals, and merge strategy (squash, rebase, merge).
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["pull-requests"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["pull-requests"])
 
 
 @git_server.tool(annotations={"readOnlyHint": True})
@@ -32,10 +29,7 @@ async def get_branching_strategy(ctx: Context) -> KnowledgeList:
     Covers the adopted flow model (trunk-based, gitflow, etc.), branch naming
     patterns, protected branch rules, release branch lifecycle, and hotfix process.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["branching"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["branching"])
 
 
 @git_server.tool(annotations={"readOnlyHint": True})
@@ -46,7 +40,4 @@ async def get_code_review_standards(ctx: Context) -> KnowledgeList:
     feedback guidelines, blocking vs. non-blocking comments, and approval requirements
     before merging.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["code-review"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["code-review"])

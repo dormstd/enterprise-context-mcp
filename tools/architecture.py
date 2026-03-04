@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from fastmcp import Context, FastMCP
 
-from db import query_entries
-from models import KnowledgeEntry, KnowledgeList
+from db import fetch_knowledge
+from models import KnowledgeList
 
 arch_server = FastMCP("Architecture")
 
@@ -19,10 +19,7 @@ async def get_architecture_guidelines(ctx: Context) -> KnowledgeList:
     Covers approved patterns, when an Architecture Decision Record (ADR) is required,
     the architecture review process, and principles guiding system design choices.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["guidelines"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["guidelines"])
 
 
 @arch_server.tool(annotations={"readOnlyHint": True})
@@ -35,7 +32,4 @@ async def get_tech_radar(ctx: Context) -> KnowledgeList:
     - Assess: worth exploring, not yet mature enough for production
     - Hold: avoid for new projects; may still exist in legacy systems
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["tech-radar"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["tech-radar"])

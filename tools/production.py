@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from fastmcp import Context, FastMCP
 
-from db import query_entries
-from models import KnowledgeEntry, KnowledgeList
+from db import fetch_knowledge
+from models import KnowledgeList
 
 production_server = FastMCP("Production")
 
@@ -20,10 +20,7 @@ async def get_production_checklist(ctx: Context) -> KnowledgeList:
     be deployed to the production (PRO) environment. Covers observability,
     security, performance, runbook, support, and compliance criteria.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["checklist"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["checklist"])
 
 
 @production_server.tool(annotations={"readOnlyHint": True})
@@ -33,10 +30,7 @@ async def get_monitoring_standards(ctx: Context) -> KnowledgeList:
     Covers required metrics, log formats, distributed tracing expectations,
     alerting thresholds, SLA/SLO definitions, and approved tooling.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["monitoring"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["monitoring"])
 
 
 @production_server.tool(annotations={"readOnlyHint": True})
@@ -47,10 +41,7 @@ async def get_deployment_process(ctx: Context) -> KnowledgeList:
     rollback procedures, maintenance windows, and communication protocols
     during and after deployments.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["deployment"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["deployment"])
 
 
 @production_server.tool(annotations={"readOnlyHint": True})
@@ -61,7 +52,4 @@ async def get_incident_response_process(ctx: Context) -> KnowledgeList:
     communication templates, war-room protocols, post-mortem requirements,
     and SLA obligations for incident resolution times.
     """
-    db = ctx.lifespan_context["db"]
-    entries = await query_entries(db, category=_CATEGORY, tags=["incidents"])
-    items = [KnowledgeEntry(**e) for e in entries]
-    return KnowledgeList(entries=items, total=len(items))
+    return await fetch_knowledge(ctx, category=_CATEGORY, tags=["incidents"])
